@@ -1,0 +1,21 @@
+<launch>
+
+    <arg name="rgbd_bag_play_file"      value="_2022-11-23-10-33-38.bag"/>
+    <arg name="rgbd_bag_play"           value="$(find rtabmap_certh)/bags/stereo_data/$(arg rgbd_bag_play_file)"/>
+    <arg name="rviz_cfg"                value="$(find rtabmap_certh)/config/rgbd.rviz" />
+
+    <include file="$(find rtabmap_ros)/launch/rtabmap.launch">
+        <arg name="rtabmap_args"            value="--delete_db_on_start --Vis/CorFlowMaxLevel 5 --Stereo/MaxDisparity 200"/>
+        <arg name="frame_id"                value="base_link" />
+        <arg name="rtabmapviz"              value="false" />
+        <arg name="use_sim_time"            value="true" />
+        <arg name="rgb_topic"               value="/zed2/zed_node/rgb/image_rect_color" />
+        <arg name="depth_topic"             value="/zed2/zed_node/depth/depth_registered" />     
+        <arg name="camera_info_topic"       value="/zed2/zed_node/right/camera_info" />
+        <arg name="approx_sync"             value="false"/>
+        <arg name="compressed"              value="false"/>
+    </include>
+    
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rviz_cfg)"/>
+    <node name="rgbd_play" pkg="rosbag" type="play" output="screen" args="$(arg rgbd_bag_play)"/>
+</launch>
